@@ -60,9 +60,11 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
+            echo "${GHCR_PAT}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+            
             if [[ "${GITHUB_REF##*/}" == "main" ]]; then
               IMAGE_TAG=production
-              PORT=80
+              PORT=8088
             else
               IMAGE_TAG=development
               PORT=8089
