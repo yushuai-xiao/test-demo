@@ -71,7 +71,7 @@ jobs:
             # 选择环境
             if [[ "${GITHUB_REF##*/}" == "main" ]]; then
               IMAGE_TAG=production
-              PORT=80
+              PORT=8088
             else
               IMAGE_TAG=development
               PORT=8089
