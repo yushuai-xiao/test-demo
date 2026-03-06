@@ -11,38 +11,44 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # 1️⃣ 拉取代码
       - name: Checkout
         uses: actions/checkout@v4
 
+      # 2️⃣ 设置 Node
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 22.16.0
 
+      # 3️⃣ 安装依赖
       - name: Install Dependencies
         run: npm install
 
+      # 4️⃣ 单元测试
       - name: Run Unit Tests
         run: npm run test --if-present
 
+      # 5️⃣ 构建 Vue 项目
       - name: Build Vue Project
         run: npm run build
 
+      # 6️⃣ 登录 GHCR（CI runner）
       - name: Login GHCR
         run: |
-          echo ${{ secrets.GHCR_PAT }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+          echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
+      # 7️⃣ 构建 Docker 镜像
       - name: Build Docker Image
         run: |
-          # 镜像名称 + tag
           if [[ "${GITHUB_REF##*/}" == "main" ]]; then
             IMAGE_TAG=production
           else
             IMAGE_TAG=development
           fi
-
           docker build -t ghcr.io/${{ github.repository }}/vue-demo:$IMAGE_TAG .
 
+      # 8️⃣ 推送镜像到 GHCR
       - name: Push Docker Image to GHCR
         run: |
           if [[ "${GITHUB_REF##*/}" == "main" ]]; then
@@ -50,9 +56,9 @@ jobs:
           else
             IMAGE_TAG=development
           fi
-
           docker push ghcr.io/${{ github.repository }}/vue-demo:$IMAGE_TAG
 
+      # 9️⃣ 部署到服务器
       - name: Deploy to Server
         uses: appleboy/ssh-action@v0.1.7
         with:
@@ -60,6 +66,9 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
+            # 登录 GHCR（服务器端）
+            echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+            # 选择环境
             if [[ "${GITHUB_REF##*/}" == "main" ]]; then
               IMAGE_TAG=production
               PORT=80
@@ -70,7 +79,7 @@ jobs:
 
             echo "Deploying $IMAGE_TAG to server"
 
-            # 拉最新镜像
+            # 拉取最新镜像
             docker pull ghcr.io/${{ github.repository }}/vue-demo:$IMAGE_TAG
 
             # 停止旧容器
