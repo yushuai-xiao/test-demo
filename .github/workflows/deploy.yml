@@ -65,10 +65,7 @@ jobs:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
-          envs:
-            - GHCR_PAT=${{ secrets.GHCR_PAT }}
-            - GITHUB_ACTOR=${{ github.actor }}
-            - GITHUB_REF=${{ github.ref }}
+          envs: GHCR_PAT=${{ secrets.GHCR_PAT }},GITHUB_ACTOR=${{ github.actor }},GITHUB_REF=${{ github.ref }}
           script: |
             # 登录 GHCR（服务器端）
             echo "${{ GHCR_PAT }}" | docker login ghcr.io -u ${{ GITHUB_ACTOR }} --password-stdin
