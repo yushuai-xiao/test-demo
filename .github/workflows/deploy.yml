@@ -69,7 +69,7 @@ jobs:
             - GHCR_PAT=${{ secrets.GHCR_PAT }}
             - GITHUB_ACTOR=${{ github.actor }}
             - GITHUB_REF=${{ github.ref }}
-        script: |
+          script: |
             # 登录 GHCR（服务器端）
             echo "${{ GHCR_PAT }}" | docker login ghcr.io -u ${{ GITHUB_ACTOR }} --password-stdin
             # 选择环境
