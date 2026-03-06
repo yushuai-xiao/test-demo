@@ -41,7 +41,7 @@ const salesOption = ref<EChartsOption>({
       }
     }
   ]
-})
+} as EChartsOption)
 
 // 用户增长配置
 const userOption = ref<EChartsOption>({
@@ -77,7 +77,7 @@ const userOption = ref<EChartsOption>({
       }
     }
   ]
-})
+} as EChartsOption)
 
 // 趋势分析配置
 const trendOption = ref<EChartsOption>({
@@ -126,7 +126,7 @@ const trendOption = ref<EChartsOption>({
       ]
     }
   ]
-})
+} as EChartsOption)
 
 // 分类统计配置
 const categoryOption = ref<EChartsOption>({
@@ -159,14 +159,14 @@ const categoryOption = ref<EChartsOption>({
       type: 'bar',
       data: [320, 302, 301, 334, 390],
       itemStyle: {
-        color: function (params: any) {
+        color: function (params: any): string {
           const colors = ['#5470c6', '#91cc75', '#fac858', '#ee6666', '#73c0de']
-          return colors[params.dataIndex % colors.length]
+          return colors[params.dataIndex % colors.length] || '#5470c6'
         }
       }
     }
   ]
-})
+} as EChartsOption)
 
 // 统计数据
 const stats = ref([

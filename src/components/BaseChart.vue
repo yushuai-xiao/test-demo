@@ -4,7 +4,7 @@ import { useECharts } from '../hooks/useECharts'
 import type { EChartsOption } from 'echarts'
 
 interface Props {
-  option: EChartsOption
+  option: EChartsOption | any
   theme?: string
   loading?: boolean
   loadingOptions?: {
