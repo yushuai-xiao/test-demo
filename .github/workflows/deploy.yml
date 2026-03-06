@@ -67,9 +67,10 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           envs: GHCR_PAT=${{ secrets.GHCR_PAT }},GITHUB_ACTOR=${{ github.actor }},GITHUB_REF=${{ github.ref }}
           script: |
-             echo "GITHUB_REF=$GITHUB_REF"
-             echo "GITHUB_ACTOR=$GITHUB_ACTOR"
-             echo "GHCR_PAT=$GHCR_PAT"
+            echo "GITHUB_REF=$GITHUB_REF"
+            echo "GITHUB_ACTOR=$GITHUB_ACTOR"
+            echo "GHCR_PAT=$GHCR_PAT"
+            
             # 登录 GHCR（服务器端）
             echo "$GHCR_PAT" | docker login ghcr.io -u "$GITHUB_ACTOR" --password-stdin
             if [[ "${GITHUB_REF##*/}" == "main" ]]; then
