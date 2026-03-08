@@ -41,7 +41,7 @@ jobs:
       # 7️⃣ 构建 Docker 镜像
       - name: Build Docker Image
         run: |
-          if [[ "${GITHUB_REF##*/}" == "main" ]]; then
+          if [[ "${{ github.ref_name }}" == "main" ]]; then
             IMAGE_TAG=production
           else
             IMAGE_TAG=development
@@ -51,7 +51,7 @@ jobs:
       # 8️⃣ 推送镜像到 GHCR
       - name: Push Docker Image to GHCR
         run: |
-          if [[ "${GITHUB_REF##*/}" == "main" ]]; then
+          if [[ "${{ github.ref_name }}" == "main" ]]; then
             IMAGE_TAG=production
           else
             IMAGE_TAG=development
@@ -65,15 +65,15 @@ jobs:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
-          envs: GHCR_PAT=${{ secrets.GHCR_PAT }},GITHUB_ACTOR=${{ github.actor }},GITHUB_REF=${{ github.ref }}
+          envs: GHCR_PAT=${{ secrets.GHCR_PAT }},GITHUB_ACTOR=${{ github.actor }},GITHUB_REF_NAME=${{ github.ref_name }}
           script: |
-            echo "GITHUB_REF=$GITHUB_REF"
+            echo "GITHUB_REF_NAME=$GITHUB_REF_NAME"
             echo "GITHUB_ACTOR=$GITHUB_ACTOR"
             echo "GHCR_PAT=$GHCR_PAT"
 
             # 登录 GHCR（服务器端）
             echo "$GHCR_PAT" | docker login ghcr.io -u "$GITHUB_ACTOR" --password-stdin
-            if [[ "${GITHUB_REF##*/}" == "main" ]]; then
+            if [[ "$GITHUB_REF_NAME" == "main" ]]; then
               IMAGE_TAG=production
               PORT=8088
             else
