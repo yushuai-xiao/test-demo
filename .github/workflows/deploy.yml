@@ -46,7 +46,7 @@ jobs:
           else
             IMAGE_TAG=development
           fi
-          docker build -t ghcr.io/${{ github.repository }}/vue-demo:$IMAGE_TAG:latest -t ghcr.io/${{ github.repository }}/vue-demo:$IMAGE_TAG:${{ github.sha }} .
+          docker build -t ghcr.io/${{ github.repository }}/vue-demo:$IMAGE_TAG-latest -t ghcr.io/${{ github.repository }}/vue-demo:$IMAGE_TAG-${{ github.sha }} .
 
       # 8️⃣ 推送镜像到 GHCR
       - name: Push Docker Image to GHCR
@@ -56,8 +56,8 @@ jobs:
           else
             IMAGE_TAG=development
           fi
-          docker push ghcr.io/${{ github.repository }}/vue-demo:$IMAGE_TAG:latest
-          docker push ghcr.io/${{ github.repository }}/vue-demo:$IMAGE_TAG:${{ github.sha }}
+          docker push ghcr.io/${{ github.repository }}/vue-demo:$IMAGE_TAG-latest
+          docker push ghcr.io/${{ github.repository }}/vue-demo:$IMAGE_TAG-${{ github.sha }}
 
       # 9️⃣ 部署到服务器
       - name: Deploy to Server
@@ -95,11 +95,11 @@ jobs:
             echo "Deploying $IMAGE_TAG to server (branch: $GITHUB_REF_NAME, container: $CONTAINER_NAME, port: $PORT)"
 
             # 拉取最新镜像
-            docker pull ghcr.io/$GITHUB_REPOSITORY/vue-demo:$IMAGE_TAG
+            docker pull ghcr.io/$GITHUB_REPOSITORY/vue-demo:$IMAGE_TAG-latest
 
             # 停止旧容器（只停止当前环境的容器）
             docker stop $CONTAINER_NAME || true
             docker rm $CONTAINER_NAME || true
 
             # 启动新容器
-            docker run -d -p $PORT:80 --name $CONTAINER_NAME ghcr.io/$GITHUB_REPOSITORY/vue-demo:$IMAGE_TAG
+            docker run -d -p $PORT:80 --name $CONTAINER_NAME ghcr.io/$GITHUB_REPOSITORY/vue-demo:$IMAGE_TAG-latest
