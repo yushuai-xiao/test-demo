@@ -46,9 +46,7 @@ jobs:
           else
             IMAGE_TAG=development
           fi
-          docker build \
-          -t ghcr.io/${{ github.repository }}/vue-demo:$IMAGE_TAG-latest \ 
-          -t ghcr.io/${{ github.repository }}/vue-demo:$IMAGE_TAG-${{ github.sha }} .
+          docker build -t ghcr.io/${{ github.repository }}/vue-demo:$IMAGE_TAG-latest -t ghcr.io/${{ github.repository }}/vue-demo:$IMAGE_TAG-${{ github.sha }} .
 
       # 8️⃣ 推送镜像到 GHCR
       - name: Push Docker Image to GHCR
